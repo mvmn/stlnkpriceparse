@@ -3,6 +3,7 @@ package x.mvmn.util.stlnkpriceparse;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,10 +35,14 @@ public class StarlinkPriceParser {
         System.setProperty("webdriver.chrome.driver", args[0]);
 
         ChromeOptions chromeOptions = new ChromeOptions().addArguments("--disable-blink-features=AutomationControlled");
+        chromeOptions.setExperimentalOption("excludeSwitches", Arrays.asList(new String[] { "enable-automation" }));
+        chromeOptions.setExperimentalOption("useAutomationExtension", false);
         if (args.length > 2) {
             chromeOptions.setBinary(args[2]);
         }
         ChromeDriver chrome = new ChromeDriver(chromeOptions);
+
+        chrome.executeScript("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})");
 
         try {
             Map<String, Map<String, String>> results = new LinkedHashMap<>();
